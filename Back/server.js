@@ -11,6 +11,7 @@ require("./mongo")
 
 // Controllers
 const{createUser , logUser} = require("./controllers/users")
+const{getSauces,createSauce} = require("./controllers/sauces")
 
 
 // Middleware
@@ -20,7 +21,9 @@ app.use(express.json());
 // Routes
 app.post("/api/auth/signup", createUser) 
 app.post("/api/auth/login", logUser)
-app.get("/", (req, res) => res.send("hello world"));
+app.get("/api/sauces", getSauces)
+app.post("/api/sauces", createSauce)
+app.get("/", (req,res)=>res.send("Hello world"))
 
 // Listen
 app.listen(port, () => console.log("listening on port " + port));
