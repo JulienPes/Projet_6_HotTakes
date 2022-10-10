@@ -15,38 +15,52 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model("Product", productSchema);
 
-function getSauces(req,res) {
+function getSauces(req, res) {
   console.log("le token à été validé nous sommes ds getSauces");
-    // console.log("Le token à l'air bon", decoded);
-    Product.find({}).then((products) => res.send(products));
-    // res.send({ message: [{ sauce: "sauce1" }, { sauce: "sauce1" }] });
+  // console.log("Le token à l'air bon", decoded);
+  Product.find({}).then((products) => res.send(products));
+  // res.send({ message: [{ sauce: "sauce1" }, { sauce: "sauce1" }] });
+  
 }
 
 function createSauce(req, res) {
- const sauce = JSON.parse(req.body.sauce)
- const {name, manufacturer,description,mainPepper,heat,userId} = sauce
+  // const sauce = JSON.parse(req.body.sauce);
+  const {body,file} = req
+  console.log({file});
+  const {fileName} = file
+  const sauce = JSON.parse(body.sauce)
+  const { name, manufacturer, description, mainPepper, heat, userId } = sauce;
+  function makeImageUrl(req, fileName){
+    return req.protocol + "://" + req.get("host") + "/images/" + fileName
+  }
+  // console.log({ body: req.body });
+  // console.log({ file: req.file });
+  // const imageUrl = req.file.destination + req.file.filename
 
 
-  console.log({body: req.body});
+
+
+
+
   const product = new Product({
-    userId: "String",
-    name: "String",
-    manufacturer: "String",
-    description: "String",
-    mainPepper: "String",
-    imageUrl: "String",
-    heat: 2,
-    likes: 2,
-    dislikes: 2,
-    usersLiked: ["String"],
-    usersDisliked: ["String"],
+    userId,
+    name,
+    manufacturer,
+    description,
+    mainPepper,
+    imageUrl: makeImageUrl(req,fileName), 
+    heat,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersDisliked: [],
   });
   product
     .save()
     .then(() => console.log("produit enregistré"))
     .catch(console.error);
 }
-module.exports = { getSauces, createSauce};
+module.exports = { getSauces, createSauce };
 // userId: String,
 // name: String,
 // manufacturer: String,
