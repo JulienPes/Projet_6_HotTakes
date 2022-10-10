@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
@@ -16,31 +15,19 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model("Product", productSchema);
 
-function getSauces(req, res) {
-  const header = req.header("Authorization");
-  if (header == null) {
-    return res.status(403).send({ message: "Invalid" });
-  }
-  const token = header.split(" ")[1];
-  if (token == null) {
-    return res.status(403).send({ message: "Token cannot be null" });
-  }
-  jwt.verify(token, process.env.JWT_PASSWORD, (err, decoded) =>
-    handleToken(err, decoded, res)
-  );
-}
-
-function handleToken(err, decoded, res) {
-  if (err) {
-    res.status(403).send({ message: "Token invalid" + err });
-  } else {
-    console.log("Le token à l'air bon", decoded);
+function getSauces(req,res) {
+  console.log("le token à été validé nous sommes ds getSauces");
+    // console.log("Le token à l'air bon", decoded);
     Product.find({}).then((products) => res.send(products));
     // res.send({ message: [{ sauce: "sauce1" }, { sauce: "sauce1" }] });
-  }
 }
 
 function createSauce(req, res) {
+ const sauce = JSON.parse(req.body.sauce)
+ const {name, manufacturer,description,mainPepper,heat,userId} = sauce
+
+
+  console.log({body: req.body});
   const product = new Product({
     userId: "String",
     name: "String",
@@ -56,10 +43,10 @@ function createSauce(req, res) {
   });
   product
     .save()
-    .then(() => console.log("produit enregistré", res))
+    .then(() => console.log("produit enregistré"))
     .catch(console.error);
 }
-module.exports = { getSauces, createSauce };
+module.exports = { getSauces, createSauce};
 // userId: String,
 // name: String,
 // manufacturer: String,
