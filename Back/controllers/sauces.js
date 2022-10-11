@@ -20,27 +20,21 @@ function getSauces(req, res) {
   // console.log("Le token à l'air bon", decoded);
   Product.find({}).then((products) => res.send(products));
   // res.send({ message: [{ sauce: "sauce1" }, { sauce: "sauce1" }] });
-  
 }
 
 function createSauce(req, res) {
   // const sauce = JSON.parse(req.body.sauce);
-  const {body,file} = req
-  console.log({file});
-  const {fileName} = file
-  const sauce = JSON.parse(body.sauce)
+  const { body, file } = req;
+  console.log({ file });
+  const { fileName } = file;
+  const sauce = JSON.parse(body.sauce);
   const { name, manufacturer, description, mainPepper, heat, userId } = sauce;
-  function makeImageUrl(req, fileName){
-    return req.protocol + "://" + req.get("host") + "/images/" + fileName
+  function makeImageUrl(req, fileName) {
+    return req.protocol + "://" + req.get("host") + "/images/" + fileName;
   }
   // console.log({ body: req.body });
   // console.log({ file: req.file });
   // const imageUrl = req.file.destination + req.file.filename
-
-
-
-
-
 
   const product = new Product({
     userId,
@@ -48,7 +42,7 @@ function createSauce(req, res) {
     manufacturer,
     description,
     mainPepper,
-    imageUrl: makeImageUrl(req,fileName), 
+    imageUrl: makeImageUrl(req, fileName),
     heat,
     likes: 0,
     dislikes: 0,
