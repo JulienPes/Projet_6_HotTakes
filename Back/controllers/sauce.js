@@ -1,5 +1,5 @@
 const Sauce = require("../models/Sauce");
-const fs = require('fs');
+const fs = require("fs");
 
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
@@ -8,15 +8,17 @@ exports.getAllSauces = (req, res, next) => {
 };
 
 exports.createSauce = (req, res, next) => {
-  const sauceObject = JSON.parse(req.body.sauce)
+  const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`,
     likes: 0,
     dislikes: 0,
-    usersLiked: [' '],
-    usersdisLiked: [' '],
+    usersLiked: [" "],
+    usersdisLiked: [" "],
   });
   sauce
     .save()
@@ -42,5 +44,20 @@ exports.deleteSauce = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
+exports.updateSauce = (req, res, next) => {
+  const sauceObject = req.file
+    ? {
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      }
+    : { ...req.body };
 
-
+  Sauce.updateOne(
+    { _id: req.params.id },
+    { ...sauceObject, _id: req.params.id }
+  )
+    .then(res.status(200).json({ message: "Sauce modifiée" }))
+    .catch((error) => res.status(400).json({ error }));
+};
