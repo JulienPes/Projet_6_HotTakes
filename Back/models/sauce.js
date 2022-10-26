@@ -1,5 +1,8 @@
+// Object database Modeling 
 const mongoose = require('mongoose')
-
+// Plugin qui intercepte les erreurs de mongoose pour en faire des erreurs http 
+const mongooseErrors = require("mongoose-errors")
+// Création du modelSchéma de construction d'une sauce
 const sauceSchema = mongoose.Schema({
   userId: { type: String, required: true },
   name: { type: String, required: true },
@@ -14,4 +17,6 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String], required: true},
 })
 
+
+sauceSchema.plugin(mongooseErrors);
 module.exports = mongoose.model('Sauce', sauceSchema)

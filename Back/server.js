@@ -1,3 +1,4 @@
+// Module Node.js permettant de transférer des données via le protocole HTTP
 const http = require('http');
 const app = require('./app');
 
