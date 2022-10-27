@@ -13,10 +13,13 @@ module.exports = (req, res, next) => {
     // Récuperation de l'id utilisateur dans l'objet decoded token
     const userId = decodedToken.userId;
     // Si l'id utilisateur présent dans le corps de la requête est different de l'identifiant récuperer dans le jwt
-    if (req.body.userId && req.body.userId !== userId) {
+    if (!userId) {
     // Envoi d'une réponse 'Invalid user ID'
       throw 'Invalid user ID';
     } else {
+      req.auth = {
+        userId : userId
+      }
       // Sinon aller au middleware suivant
       next();
     }
